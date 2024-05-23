@@ -1,4 +1,4 @@
-package myhandler
+package users
 
 import (
 	"fmt"

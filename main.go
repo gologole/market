@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"main.go/pkg/myhandler"
+	"main.go/pkg/myhandler/users"
 	"main.go/pkg/repository"
 	"main.go/pkg/service"
 	"main.go/server"
@@ -15,7 +15,8 @@ func main() {
 	db := new(repository.SQLiteDB)
 	db.ConnectDB()
 	service := service.NewAuthservice(db)
-	handler := new(myhandler.MyHandler)
+
+	handler := new(users.MyHandler)
 	handler.Service = service
 
 	server := new(server.Server)
