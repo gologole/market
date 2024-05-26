@@ -1,7 +1,8 @@
 package models
 
 type Hachaton struct {
-	id          int
+	Id          int
 	Page        string `json:"page"` //изображение
-	description string `json:"description"`
+	Description string `json:"description"`
+	Participant []Team `json:"participant"`
 }
