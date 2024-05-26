@@ -40,16 +40,13 @@ func (h *MyHandler) InitRouts() *gin.Engine {
 		router.PUT("/:id", h.UpdateTeam)
 	}
 
-	/*
-		router.Group("events")
-		{
-			router.GET("/:id", GetEvent)
-			router.GET("/getEvent", GetEvents)
-			router.POST("/createEvent", CreateEvent)
-			router.PUT("/:id", UpdateEvent)    //включая запись команд
-			router.DELETE("/:id", DeleteEvent) //требует авторизации
-		}
-	*/
+	router.Group("events")
+	{
+		router.GET("/:id", GetEvent)
+		router.GET("/getEvent", GetEvents)
+		router.POST("/createEvent", CreateEvent)
+		router.PUT("/:id", UpdateEvent) //включая запись команд
+	}
 
 	return router
 }

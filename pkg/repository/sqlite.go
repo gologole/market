@@ -150,12 +150,41 @@ func NewTeamRepository(db *sql.DB) *teamRepository {
 }
 
 func (r *teamRepository) CreateTeam(team *models.Team) error {
+	tx, err := r.db.Begin()
+	if err != nil {
+		return fmt.Errorf("could not begin transaction: %v", err)
+	}
+
+	// Insert into teams table
 	query := `INSERT INTO teams (name, page, description, is_fully, who_need, hachatons, won, story) 
               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-	_, err := r.db.Exec(query, team.Name, team.Page, team.Description, team.IsFully, strings.Join(team.WhoNeed, ","), team.Hachatons, team.Won, team.Story)
+	res, err := tx.Exec(query, team.Name, team.Page, team.Description, team.IsFully, strings.Join(team.WhoNeed, ","), team.Hachatons, team.Won, team.Story)
 	if err != nil {
+		tx.Rollback()
 		return fmt.Errorf("could not create team: %v", err)
 	}
+
+	teamID, err := res.LastInsertId()
+	if err != nil {
+		tx.Rollback()
+		return fmt.Errorf("could not get last insert id: %v", err)
+	}
+
+	// Insert into teamates table
+	for _, teamate := range team.Teamate {
+		query = `INSERT INTO teamates (team_id, user_id) VALUES (?, ?)`
+		_, err := tx.Exec(query, teamID, teamate.ID)
+		if err != nil {
+			tx.Rollback()
+			return fmt.Errorf("could not create teamate: %v", err)
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		tx.Rollback()
+		return fmt.Errorf("could not commit transaction: %v", err)
+	}
+
 	return nil
 }
 

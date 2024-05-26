@@ -18,7 +18,7 @@ func NewService(r repository.Repository) *Service {
 	return &Service{
 		AuthService: NewAuthService(r.User),
 		//EventService: NewEventService(r.Hachaton),
-		//TeamService:  NewTeamService(r.Team),
+		TeamService: NewTeamService(r.Team),
 		UserService: NewUserService(r.User),
 	}
 }

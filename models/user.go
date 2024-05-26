@@ -15,11 +15,3 @@ type User struct {
 	TeamID       int    `json:"team"`          //0 если нет команды и по дефолту
 	Skills       string `json:"skills"`
 }
-
-type Teamate struct {
-	ID         int    `json:"id"`        //id пользователя(User struct)
-	Name       string `json:"name"`      //Имя пользователя
-	RoleInTeam string `json:"role"`      //Роль пользователя в команде
-	TeamID     int    `json:"team_id"`   //ид тимы
-	TeamName   string `json:"team_name"` //для быстрого отображения на сайте,если не нужно будет то удалим
-}
