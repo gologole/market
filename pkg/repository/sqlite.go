@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"main.go/models"
+	"strings"
 )
 
 type Repository struct {
@@ -16,7 +17,7 @@ type Repository struct {
 func NewRepository(userdb *sql.DB, teamdb *sql.DB, hackdb *sql.DB) *Repository {
 	return &Repository{
 		User: NewUserRepository(userdb),
-		//Team:     NewTeamRepository(teamdb),
+		Team: NewTeamRepository(teamdb),
 		//Hachaton: NewHachatonRepository(hackdb),
 	}
 }
@@ -33,6 +34,7 @@ type UserRepository interface {
 type TeamRepository interface {
 	CreateTeam(team *models.Team) error
 	GetTeamByID(id int) (*models.Team, error)
+	GetAllTeams() ([]*models.Team, error)
 	UpdateTeam(team *models.Team) error
 	DeleteTeam(id int) error
 }
@@ -137,31 +139,87 @@ func (r *userRepository) GetAllUsers() ([]*models.User, error) {
 	return users, nil
 }
 
-/*
 type teamRepository struct {
 	db *sql.DB
 }
 
-func NewTeamRepository(db *sql.DB) TeamRepository {
-	return &teamRepository{db: db}
+func NewTeamRepository(db *sql.DB) *teamRepository {
+	return &teamRepository{
+		db: db,
+	}
 }
 
 func (r *teamRepository) CreateTeam(team *models.Team) error {
-	// Implementation...
+	query := `INSERT INTO teams (name, page, description, is_fully, who_need, hachatons, won, story) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+	_, err := r.db.Exec(query, team.Name, team.Page, team.Description, team.IsFully, strings.Join(team.WhoNeed, ","), team.Hachatons, team.Won, team.Story)
+	if err != nil {
+		return fmt.Errorf("could not create team: %v", err)
+	}
+	return nil
 }
 
 func (r *teamRepository) GetTeamByID(id int) (*models.Team, error) {
-	// Implementation...
+	query := `SELECT id, name, page, description, is_fully, who_need, hachatons, won, story FROM teams WHERE id = ?`
+	row := r.db.QueryRow(query, id)
+
+	team := &models.Team{}
+	var whoNeed string
+	err := row.Scan(&team.ID, &team.Name, &team.Page, &team.Description, &team.IsFully, &whoNeed, &team.Hachatons, &team.Won, &team.Story)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("could not get team: %v", err)
+	}
+	team.WhoNeed = strings.Split(whoNeed, ",")
+	return team, nil
 }
 
 func (r *teamRepository) UpdateTeam(team *models.Team) error {
-	// Implementation...
+	query := `UPDATE teams SET name=?, page=?, description=?, is_fully=?, who_need=?, hachatons=?, won=?, story=? WHERE id=?`
+	_, err := r.db.Exec(query, team.Name, team.Page, team.Description, team.IsFully, strings.Join(team.WhoNeed, ","), team.Hachatons, team.Won, team.Story, team.ID)
+	if err != nil {
+		return fmt.Errorf("could not update team: %v", err)
+	}
+	return nil
 }
 
 func (r *teamRepository) DeleteTeam(id int) error {
-	// Implementation...
+	query := `DELETE FROM teams WHERE id=?`
+	_, err := r.db.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("could not delete team: %v", err)
+	}
+	return nil
 }
 
+func (r *teamRepository) GetAllTeams() ([]*models.Team, error) {
+	query := `SELECT id, name, page, description, is_fully, who_need, hachatons, won, story FROM teams`
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("could not get teams: %v", err)
+	}
+	defer rows.Close()
+
+	var teams []*models.Team
+	for rows.Next() {
+		team := &models.Team{}
+		var whoNeed string
+		err := rows.Scan(&team.ID, &team.Name, &team.Page, &team.Description, &team.IsFully, &whoNeed, &team.Hachatons, &team.Won, &team.Story)
+		if err != nil {
+			return nil, fmt.Errorf("could not scan team: %v", err)
+		}
+		team.WhoNeed = strings.Split(whoNeed, ",")
+		teams = append(teams, team)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating over teams: %v", err)
+	}
+	return teams, nil
+}
+
+/*
 type hachatonRepository struct {
 	db *sql.DB
 }

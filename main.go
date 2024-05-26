@@ -59,8 +59,6 @@ func Migrate(pathto string) (userDB *sql.DB, teamDB *sql.DB, eventDB *sql.DB, er
 
 	return userDB, teamDB, eventDB, nil
 }
-
-// createTables создает необходимые таблицы в базах данных.
 func createTables(userDB, teamDB, eventDB *sql.DB) error {
 	userTable := `
 	CREATE TABLE IF NOT EXISTS users (
@@ -86,7 +84,9 @@ func createTables(userDB, teamDB, eventDB *sql.DB) error {
 		description TEXT,
 		is_fully BOOLEAN,
 		who_need TEXT,
-		rating TEXT
+		hachatons INTEGER,
+		won INTEGER,
+		story TEXT
 	);`
 
 	eventTable := `

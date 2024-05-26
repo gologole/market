@@ -27,3 +27,7 @@ func (s *UserServiceStruct) GetProfileList() []*models.User {
 func (s *UserServiceStruct) DeleteProfile(id int) error {
 	return s.r.DeleteUser(id)
 }
+
+func (s *UserServiceStruct) UpdateUser(user *models.User) error {
+	return s.r.UpdateUser(user)
+}

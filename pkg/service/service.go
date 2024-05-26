@@ -40,4 +40,5 @@ type UserService interface {
 	GetProfileByID(id int) (*models.User, error)
 	GetProfileList() []*models.User
 	DeleteProfile(id int) error
+	UpdateUser(user *models.User) error
 }

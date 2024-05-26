@@ -22,24 +22,22 @@ func (h *MyHandler) InitRouts() *gin.Engine {
 	{
 		router.Group("/auth")
 		{
-			router.POST("/login", h.Signin)
-			router.POST("/signup", h.Signup)
+			router.POST("/login", h.Signin)  //принмает json с login и пароль
+			router.POST("/signup", h.Signup) //принимает сереализованного юзера
 		}
 
-		router.GET("/profile/:id", h.GetProfileHandler)
-		router.GET("/profiles", h.GetProfileListHandler)
-		router.DELETE("/profile/:id", h.DeleteProfileHandler)
+		router.GET("/profile/:id", h.GetProfileHandler)         //возвращает юзера с заданным id
+		router.GET("/profiles", h.GetProfileListHandler)        //возвращает массив юзеров
+		router.DELETE("/profile/:id", h.DeleteProfileHandler)   //принимает только id удаляемого
+		router.POST("/profile/updateprofile/:id", h.UpdateUser) //принимает id и измененную запись (со всеми полями)
+	}
 
-		//router.Group("update")
-		//{
-		//	router.PUT("/profile/:id/password", UpdatePassword)
-		//	router.PUT("/profile/:id/email", UpdateEmail)
-		//	router.PUT("/profile/:id/phone", UpdatePhone)
-		//	router.PUT("/profile/:id/Role", UpdateRole)
-		//	router.PUT("/profile/:id/TeamID", UpdateTeamID)
-		//	router.PUT("/profile/:id/skills", UpdateSkills)
-		//	router.PUT("/profile/:id/country", UpdateCountry)
-		//}
+	router.Group("team")
+	{
+		router.GET("/:id", h.GetTeam)
+		router.GET("/getteams", h.GetTeams)
+		router.POST("/createteam", h.CreateTeam)
+		router.PUT("/:id", h.UpdateTeam)
 	}
 
 	/*
@@ -51,16 +49,7 @@ func (h *MyHandler) InitRouts() *gin.Engine {
 			router.PUT("/:id", UpdateEvent)    //включая запись команд
 			router.DELETE("/:id", DeleteEvent) //требует авторизации
 		}
-
-		router.Group("team")
-		{
-			router.GET("/:id", GetTeam)
-			router.GET("/getTeams", GetTeams)
-			router.POST("/getTeamsbyparams", GetTeamsbyparams)
-			router.GET("/getRatingList", GetRatingList)
-			router.POST("/createTeam", CreateTeam)
-			router.PUT("/:id", UpdateTeam)
-		}
 	*/
+
 	return router
 }

@@ -2,6 +2,7 @@ package myhandler
 
 import (
 	"github.com/gin-gonic/gin"
+	"main.go/models"
 	"net/http"
 	"strconv"
 )
@@ -32,4 +33,28 @@ func (h *MyHandler) DeleteProfileHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Profile deleted successfully"})
+}
+func (h *MyHandler) UpdateUser(c *gin.Context) {
+	var user models.User
+	if err := c.BindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Извлекаем ID пользователя из параметра маршрута
+	userIDStr := c.Param("id")
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user ID"})
+		return
+	}
+	user.ID = userID
+
+	// Обновляем данные о пользователе
+	if err := h.Service.UpdateUser(&user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User updated successfully"})
 }
