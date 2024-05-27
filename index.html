@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="pages/index.css">
+    <!-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> -->
+    <script defer src="./js/index.js"></script>
+    <title>Хакатоны.рус</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Поиск участников и команд</h1>
+        <div class="form-wrapper">
+            <select class="role-select" id="role-select" onchange="updateForm()">
+                <option value="participant">Участник</option>
+                <option value="team">Команда</option>
+            </select>
+            <form class="search-section" id="form-fields">
+            
+            </form>
+        </div>
+
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <span class="close" onclick="closePopup()">&times;</span>
+                <h3>Профиль участника</h3>
+                <img id="popup-image" src="user.png" alt="Profile Picture">
+                <p><strong id="popup-name">Анастасия Волочкова</strong></p>
+                <p id="popup-specialization">Специализация: Дизайнер</p>
+                <p id="popup-description">Активная и рада новым вызовам, готова к испытаниям</p>
+                <p><strong>Участие в хакатонах</strong></p>
+                <p id="popup-hackathons">Smart Social - 3 место</p>
+            </div>
+        </div>
+
+        <h2 id="h2">Участники</h2>
+        
+        <ul class="participants-list">
+       
+        </ul>
+    </div>
+</body>
+</html>

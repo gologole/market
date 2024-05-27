@@ -3,7 +3,6 @@ package myhandler
 import (
 	"github.com/gin-gonic/gin"
 	"main.go/pkg/service"
-	"net/http"
 )
 
 type MyHandler struct {
@@ -19,8 +18,9 @@ func NewMyHandler(service *service.Service) *MyHandler {
 func (h *MyHandler) InitRouts() *gin.Engine {
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "./index.html", gin.H{})
+	// Раздача HTML файла из корня проекта
+	router.GET("/site", func(c *gin.Context) {
+		c.File("index.html")
 	})
 
 	router.Group("/user")
