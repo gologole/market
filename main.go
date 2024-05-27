@@ -59,43 +59,47 @@ func Migrate(pathto string) (userDB *sql.DB, teamDB *sql.DB, eventDB *sql.DB, er
 
 	return userDB, teamDB, eventDB, nil
 }
+
 func createTables(userDB, teamDB, eventDB *sql.DB) error {
 	userTable := `
-	CREATE TABLE IF NOT EXISTS users (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		login TEXT,
-		page TEXT,
-		password TEXT,
-		password_hash TEXT,
-		email TEXT,
-		role TEXT,
-		address TEXT,
-		phone_number TEXT,
-		description TEXT,
-		team_id INTEGER,
-		skills TEXT
-	);`
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        login TEXT,
+        page TEXT,
+        password TEXT,
+        password_hash TEXT,
+        email TEXT,
+        role TEXT,
+        address TEXT,
+        phone_number TEXT,
+        description TEXT,
+        team_id INTEGER,
+        skills TEXT,
+        hachatons INTEGER,
+        won INTEGER,
+        story TEXT
+    );`
 
 	teamTable := `
-	CREATE TABLE IF NOT EXISTS teams (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		name TEXT,
-		page TEXT,
-		description TEXT,
-		is_fully BOOLEAN,
-		who_need TEXT,
-		hachatons INTEGER,
-		won INTEGER,
-		story TEXT
-	);`
+    CREATE TABLE IF NOT EXISTS teams (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        page TEXT,
+        description TEXT,
+        is_fully BOOLEAN,
+        who_need TEXT,
+        hachatons INTEGER,
+        won INTEGER,
+        story TEXT
+    );`
 
 	eventTable := `
-	CREATE TABLE IF NOT EXISTS events (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		page TEXT,
-		description TEXT,
-		participant TEXT
-	);`
+    CREATE TABLE IF NOT EXISTS events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        page TEXT,
+        description TEXT,
+        participant TEXT
+    );`
 
 	_, err := userDB.Exec(userTable)
 	if err != nil {

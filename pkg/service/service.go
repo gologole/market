@@ -8,7 +8,7 @@ import (
 // Service объединяет все сервисы.
 type Service struct {
 	AuthService
-	//EventService
+	EventService
 	TeamService
 	UserService
 }
@@ -16,10 +16,10 @@ type Service struct {
 // NewService создает новый экземпляр объединенного сервиса.
 func NewService(r repository.Repository) *Service {
 	return &Service{
-		AuthService: NewAuthService(r.User),
-		//EventService: NewEventService(r.Hachaton),
-		TeamService: NewTeamService(r.Team),
-		UserService: NewUserService(r.User),
+		AuthService:  NewAuthService(r.User),
+		EventService: NewEventService(r.Hachaton),
+		TeamService:  NewTeamService(r.Team),
+		UserService:  NewUserService(r.User),
 	}
 }
 
@@ -41,4 +41,7 @@ type UserService interface {
 	GetProfileList() []*models.User
 	DeleteProfile(id int) error
 	UpdateUser(user *models.User) error
+	FindUsersBySkills(skills []string) ([]*models.User, error)
+	GetUsersByTeamID(teamID int) ([]*models.User, error)
+	GetUsersSortedByHackatonsAndWon() ([]*models.User, error)
 }

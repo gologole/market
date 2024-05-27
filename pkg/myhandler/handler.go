@@ -26,15 +26,18 @@ func (h *MyHandler) InitRouts() *gin.Engine {
 			router.POST("/signup", h.Signup) //принимает сереализованного юзера
 		}
 
-		router.GET("/profile/:id", h.GetProfileHandler)         //возвращает юзера с заданным id
-		router.GET("/profiles", h.GetProfileListHandler)        //возвращает массив юзеров
-		router.DELETE("/profile/:id", h.DeleteProfileHandler)   //принимает только id удаляемого
-		router.POST("/profile/updateprofile/:id", h.UpdateUser) //принимает id и измененную запись (со всеми полями)
+		router.GET("/profile/:id", h.GetProfileHandler)             //возвращает юзера с заданным id
+		router.POST("/getuserbyparams", h.FindUsersBySkillsHandler) //возвращает массив юзеров подходящих по спецификации
+		router.GET("/profiles", h.GetProfileListHandler)            //возвращает массив юзеров
+		router.DELETE("/profile/:id", h.DeleteProfileHandler)       //принимает только id удаляемого
+		router.POST("/profile/updateprofile/:id", h.UpdateUser)     //принимает id и измененную запись (со всеми полями)
+		router.GET("/getuserbyteam/:id", h.GetUsersByTeam)
+		router.GET("/getsortrating", h.GetSortRating)
 	}
 
 	router.Group("team")
 	{
-		router.GET("/:id", h.GetTeam)
+		router.GET("getteam/:id", h.GetTeam)
 		router.GET("/getteams", h.GetTeams)
 		router.POST("/createteam", h.CreateTeam)
 		router.PUT("/:id", h.UpdateTeam)
@@ -42,10 +45,10 @@ func (h *MyHandler) InitRouts() *gin.Engine {
 
 	router.Group("events")
 	{
-		router.GET("/:id", GetEvent)
-		router.GET("/getEvent", GetEvents)
-		router.POST("/createEvent", CreateEvent)
-		router.PUT("/:id", UpdateEvent) //включая запись команд
+		router.GET("getevent/:id", h.GetEvent)
+		router.GET("/getevents", h.GetEvents)
+		router.POST("/createEvent", h.CreateEvent)
+		router.PUT("updateEvent/:id", h.UpdateEvent)
 	}
 
 	return router
